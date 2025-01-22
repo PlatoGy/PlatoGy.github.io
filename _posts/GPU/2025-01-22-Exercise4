@@ -150,3 +150,5 @@ For loop-based code, this approach is called **loop blocking** or **tiling**.
 3. Plot the resulting data on a **roofline plot**.  
 
    - **Observation:** The performance should now be largely **insensitive to the number of rows**.
+
+## Questions:
