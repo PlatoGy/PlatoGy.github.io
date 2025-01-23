@@ -1,14 +1,13 @@
 ---
 layout: post
-title: ASML-Foundation
-author: wichai
-date: 2025-01-14 19:35
+title: GPU Exercise4
+author: Patrick Gao
+date: 2025-01-22 19:35
 categories:
-  - Study
-  - Master
+  - MISCADA
 tags:
-  - DU
-  - ASML
+  - GPU Course
+  - Term 2 Assignment
 mermaid: true
 math: true
 pin: false
