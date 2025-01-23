@@ -5,8 +5,8 @@ author: Patrick Gao
 date: 2025-01-22 19:35
 categories:
   - MISCADA
-tags:
   - GPU Course
+tags:
   - Term 2 Assignment
 mermaid: true
 math: true
