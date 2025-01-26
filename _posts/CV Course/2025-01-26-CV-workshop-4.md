@@ -2,7 +2,7 @@
 layout: post
 title: CV Workshop 4
 author: Patrick Gao
-date: 2025-01-23 14:18
+date: 2025-01-26 22:00
 categories:
   - MISCADA
   - CV Course
