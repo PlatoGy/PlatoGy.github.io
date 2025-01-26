@@ -2,7 +2,7 @@
 layout: post
 title: 27 Move Element
 author: Patrick Gao
-date: 2025-01-27 21:19
+date: 2025-01-26 21:19
 categories:
   - Data Struture
   - LeetCode Exercise
