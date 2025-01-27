@@ -1,61 +1,117 @@
 ---
 layout: post
-title: 58 length-of-last-word
+title: 59-spiral-matrix-ii
 author: Patrick Gao
-date: 2025-01-27 11:32
+date: 2025-01-27 13:40
 categories:
   - Data Struture
   - LeetCode Exercise
 tags:
-  - String
+  - Array
 mermaid: true
 math: true
 pin: false
 ---
 
-# 58 length-of-last-word
+# 59-spiral-matrix-ii
 
-Given a string s consisting of words and spaces, return the length of the last word in the string.
-
-A word is a maximal 
-substring
- consisting of non-space characters only.
-
- 
+Given a positive integer n, generate an n x n matrix filled with elements from 1 to n2 in spiral order.
 
 Example 1:
 
-Input: s = "Hello World"
-Output: 5
-Explanation: The last word is "World" with length 5.
+Input: n = 3
+Output: [[1,2,3],[8,9,4],[7,6,5]]
 Example 2:
 
-Input: s = "   fly me   to   the moon  "
-Output: 4
-Explanation: The last word is "moon" with length 4.
-Example 3:
+Input: n = 1
+Output: [[1]]
 
-Input: s = "luffy is still joyboy"
-Output: 6
-Explanation: The last word is "joyboy" with length 6.
+
+My solution：
+It's not a difficult question, but it is complicated.
 
 ```python
 class Solution(object):
-    def lengthOfLastWord(self, s):
+
+    def generateMatrix(self, n):
         """
-        :type s: str
-        :rtype: int
+        :type n: int
+        :rtype: List[List[int]]
         """
-        # cut the space and reverse the string
-        s = s.strip()[::-1]
-        res = 0
-        for i in s:
-            if i != ' ':
-                res += 1
+        # a function to generate the length of every step
+        def get_length(n):
+            arr = [float('inf')] * (2*n -1)
+            arr[0] = n
+            arr[-1] = 1
+            arr[-2] = 1
+            num = n-1
+            i = 1
+            while(i < 2*n-3):
+                count = 0
+                while(count<2):
+                    count += 1
+                    arr[i] = num
+                    i += 1 
+                num -= 1
+            return arr[::-1]
+
+        # Special condition, when n is only 1
+        if n == 1:
+            return [[1]]
+
+        # Initialize the matrix n * n
+        matrix = [[float('inf') for _ in range(n)] for _ in range(n)]
+        num = 1
+        steps = 2*n - 1 # steps is the counter of movement 
+        length = 0 # length is the moving distance each time
+        direction = 0 # use for judge direction, 0 -> left, 1 -> down, 2 -> up, 3 -> right
+        length_arr = get_length(n) # store length of every step
+        i = 0 # index 
+        j = 0 # index 
+        while steps:
+            length = length_arr[steps-1]
+            if direction % 4 == 0:
+                step_part = 0
+                while step_part < length:
+                    matrix[i][j] = num
+                    j += 1
+                    num += 1
+                    step_part += 1
+                j -= 1
+                i += 1
+            elif direction % 4 == 1:
+                step_part = 0
+                while step_part < length:
+                    matrix[i][j] = num
+                    i += 1
+                    num += 1
+                    step_part += 1
+                i -= 1
+                j -= 1
+            elif direction % 4 == 2:
+                step_part = 0
+                while step_part < length:
+                    matrix[i][j] = num
+                    j -= 1
+                    num += 1
+                    step_part += 1
+                j += 1
+                i -= 1
             else:
-                break
-        return res
+                step_part = 0
+                while step_part < length:
+                    matrix[i][j] = num
+                    i -= 1
+                    num += 1
+                    step_part += 1
+                i += 1
+                j += 1
+            direction += 1
+            steps -= 1
+        return matrix
+        
+
 ```
 
 Time Complexity: `O(n)`
-Space Complexity: `O(1)`
+Space Complexity: `O(n^2)`
