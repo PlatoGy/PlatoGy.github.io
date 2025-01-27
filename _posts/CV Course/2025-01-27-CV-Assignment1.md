@@ -17,4 +17,4 @@ pin: false
 
 ## Assignment 1
 
-https://wichai-pan.github.io/posts/CV-Assignment-Part1/
+[Assignment 1](https://wichai-pan.github.io/posts/CV-Assignment-Part1/)
