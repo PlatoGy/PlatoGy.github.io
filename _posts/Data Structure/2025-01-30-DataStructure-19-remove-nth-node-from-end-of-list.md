@@ -81,3 +81,37 @@ class Solution(object):
         return dummyhead.next
         
 ```
+
+Optimization:
+Use only 1 loop to implement：
+```python
+# Definition for singly-linked list.
+# class ListNode(object):
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution(object):
+    def removeNthFromEnd(self, head, n):
+        """
+        :type head: Optional[ListNode]
+        :type n: int
+        :rtype: Optional[ListNode]
+        """
+        if not head:
+            return head
+        dummyhead = ListNode(next = head)
+        slowIndex = dummyhead
+        fastIndex = head
+        i = 0
+        while fastIndex:
+            # the distance between fast and slow index is n
+            if i == n:
+                slowIndex = slowIndex.next
+            else:
+                i += 1
+            fastIndex = fastIndex.next
+            
+        slowIndex.next = slowIndex.next.next
+        return dummyhead.next
+
+```
