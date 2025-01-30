@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 707-design-linked-list
+title: 206-reverse-linked-list
 author: Patrick Gao
 date: 2025-01-29 23:44
 categories:
