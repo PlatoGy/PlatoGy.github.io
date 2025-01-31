@@ -62,6 +62,7 @@ Explanation: The two lists do not intersect, so return null.
 
 My solution：
 
+Use dict data structure to store ListNodes, when there's a same ListNode, return it.
 ```python
 # Definition for singly-linked list.
 # class ListNode(object):
