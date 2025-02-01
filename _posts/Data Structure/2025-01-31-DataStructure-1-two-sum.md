@@ -59,7 +59,9 @@ Space Complexity: O(1)
 
 ### Best Solution
 
-Use dic data structure to store the 
+First of all, let me emphasize when to use the hash method, when we need to check whether an element has appeared, or whether an element is in the set, we should first think of the hash method. 
+
+In this case, I'm going to need a set of elements that we've traversed, and then I'm going to ask that set, as I'm traversing the set, whether that element has traversed, that is, whether it appears in that set. Then we should think about using hashing.
 ```python
 class Solution(object):
     def twoSum(self, nums, target):
