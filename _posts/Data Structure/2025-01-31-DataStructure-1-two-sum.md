@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 1-t wo
+title: 1-two-sum
 author: Patrick Gao
 date: 2025-01-31 22:41
 categories:
