@@ -111,3 +111,5 @@ class Solution(object):
 ```
 Time Complexity: O(n**2)
 Space Complexity: O(1)
+
+Thought reference link: [https://programmercarl.com](https://programmercarl.com/0015.%E4%B8%89%E6%95%B0%E4%B9%8B%E5%92%8C.html#%E6%80%9D%E8%B7%AF)
