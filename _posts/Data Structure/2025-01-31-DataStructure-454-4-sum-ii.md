@@ -109,3 +109,6 @@ class Solution(object):
         return count
 
 ```
+
+Time Complexity: O(n**2)
+Space Complexity: O(n**2)
