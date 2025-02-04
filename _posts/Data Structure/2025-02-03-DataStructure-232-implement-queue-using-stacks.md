@@ -48,6 +48,7 @@ myQueue.empty(); // return false
 
 
 ### My solution：
+```python
 class MyQueue(object):
 
     def __init__(self):
@@ -110,3 +111,4 @@ class MyQueue(object):
 # param_4 = obj.empty()
         
 
+```
