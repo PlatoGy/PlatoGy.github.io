@@ -1,6 +1,6 @@
 ---
 layout: post
-title: GPU Exercise5
+title: GPU Exercise8
 author: Patrick Gao
 date: 2025-02-05 12:21
 categories:
