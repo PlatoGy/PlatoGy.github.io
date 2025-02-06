@@ -1,6 +1,6 @@
 ---
 layout: post
-title: CV Workshop 4
+title: CV Workshop 7
 author: Patrick Gao
 date: 2025-02-06 14:00
 categories:
