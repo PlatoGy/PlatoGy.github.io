@@ -8,7 +8,6 @@ categories:
   - LeetCode Exercise
 tags:
   - Binary Tree
-  - Recursion
 mermaid: true
 math: true
 pin: false
