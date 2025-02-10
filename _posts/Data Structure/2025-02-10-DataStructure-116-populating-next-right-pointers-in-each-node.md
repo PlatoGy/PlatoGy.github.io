@@ -71,21 +71,34 @@ class Solution(object):
         :type root: Node
         :rtype: Node
         """
+"""
+# Definition for a Node.
+class Node(object):
+    def __init__(self, val=0, left=None, right=None, next=None):
+        self.val = val
+        self.left = left
+        self.right = right
+        self.next = next
+"""
+from collections import deque
+class Solution(object):
+    def connect(self, root):
+        """
+        :type root: Node
+        :rtype: Node
+        """
         if not root:
             return root
         queue = deque()
         queue.append(root)
-        res = []
         while queue:
             length = len(queue)
             for i in range(length):
                 cur = queue.popleft()
                 if i == length - 1:
                     cur.next = None
-                    res.extend([cur.val,'#'])
                 else:
                     cur.next = queue[0]
-                    res.append(cur.val)
                 if cur.left:
                     queue.append(cur.left)
                     queue.append(cur.right)
