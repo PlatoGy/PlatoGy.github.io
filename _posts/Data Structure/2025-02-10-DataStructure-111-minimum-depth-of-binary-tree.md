@@ -64,5 +64,6 @@ class Solution(object):
                 if cur.right:
                     queue.append(cur.right)
         return depth
+```      
         
-        
+
