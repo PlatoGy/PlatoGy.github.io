@@ -61,3 +61,26 @@ class Solution(object):
         return depth
 ```
         
+### recursion solution:
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution(object):
+    def maxDepth(self, root):
+        """
+        :type root: Optional[TreeNode]
+        :rtype: int
+        """
+        return self.getHeight(root)
+        
+    def getHeight(self,root):
+        if not root:
+            return 0
+        leftHeight = self.getHeight(root.left)
+        rightHeight = self.getHeight(root.right)
+        return 1 + max(leftHeight,rightHeight)
+```
