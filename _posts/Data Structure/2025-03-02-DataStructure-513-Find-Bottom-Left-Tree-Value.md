@@ -19,7 +19,6 @@ Medium
 Topics
 Companies
 Given the root of a binary tree, return the leftmost value in the last row of the tree.
-
  
 
 Example 1:
@@ -32,18 +31,41 @@ Example 2:
 
 Input: root = [1,2,3,4,null,5,6,null,null,7]
 Output: 7
-## Recursion
-
-
-
-
-
 
 ### My solution：
-
+```python
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+from collections import deque
+class Solution(object):
+    def findBottomLeftValue(self, root):
+        """
+        :type root: Optional[TreeNode]
+        :rtype: int
+        """
         
+        queue = deque()
+        queue.append(root)
+        leftMostTmp = None
+        while queue:
+            length = len(queue)
+            leftMostTmp = queue.popleft()
+            if leftMostTmp.left:
+                    queue.append(leftMostTmp.left)
+            if leftMostTmp.right:
+                queue.append(leftMostTmp.right)
 
-Time Complexity: 
-Space Complexity: 
+            for i in range(1,length):
+                tmp = queue.popleft()
+                if tmp.left:
+                    queue.append(tmp.left)
+                if tmp.right:
+                    queue.append(tmp.right)
 
-### Best solution：
+        return leftMostTmp.val
+```
+  
