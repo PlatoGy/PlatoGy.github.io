@@ -2,7 +2,7 @@
 layout: post
 title: 700-search-in-a-binary-search-tree
 author: Patrick Gao
-date: 2025-3-4 21:20
+date: 2025-3-4 14:42
 categories:
   - Data Struture
   - LeetCode Exercise
