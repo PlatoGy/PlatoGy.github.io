@@ -2,7 +2,7 @@
 layout: post
 title: 性能优化PPT3-roofline模型
 author: Patrick Gao
-date: 2025-03-28 03:23
+date: 2025-03-28 18:57
 categories:
   - MISCADA
   - GPU Course
