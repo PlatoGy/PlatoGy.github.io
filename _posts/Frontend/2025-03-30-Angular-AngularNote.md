@@ -212,7 +212,7 @@ constructor(private myService: MyService) {}
 
 ### 使用内置管道：
 
-```html
+```
 {{ username | lowercase }}
 {{ birthday | date:'longDate' }}
 ```
