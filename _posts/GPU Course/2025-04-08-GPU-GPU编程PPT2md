@@ -1,0 +1,227 @@
+---
+layout: post
+title: GPU编程PPT2
+author: Patrick Gao
+date: 2025-04-08 03:17
+categories:
+  - MISCADA
+  - GPU Course
+tags:
+  - GPU Programming
+mermaid: true
+math: true
+pin: false
+---
+# CUDA Optimization Techniques / CUDA 优化技术  
+**COMP52315 GPU Programming**  
+Lecturer: Christopher Marcotte  
+Email: christopher.marcotte@durham.ac.uk  
+
+---
+
+## 📚 Recap / 复习
+
+- **Concurrency vs. Parallelism / 并发 vs. 并行**
+- **Flynn's Taxonomy / Flynn 分类法**
+- **GPU Architecture / GPU 架构**:
+  - Streaming Multiprocessors (SMs): FPUs, LD/ST, SFUs, Tensor Cores  
+    流多处理器：浮点单元、加载/存储单元、特殊函数单元、张量核心
+  - Cache / 缓存
+  - Warp Schedulers / Warp调度器
+  - Global Memory / 全局内存
+- **SIMT Model / SIMT 模型**:
+  - Kernel function executed by a grid of thread blocks  
+    内核函数由线程块网格并行执行
+- **CPU vs GPU**:
+  - CPU: latency-driven / 延迟驱动
+  - GPU: throughput-driven / 吞吐驱动
+
+---
+
+## 🔧 Performance Optimization Tooling / 性能优化工具
+
+### Optimization Cycle / 优化周期
+
+1. Write baseline code / 编写初始代码  
+2. Tune kernel configuration / 调整内核配置  
+3. Profile to find hotspots / 使用分析器识别热点  
+4. Identify performance limiters / 找出性能瓶颈  
+5. Optimize code / 优化代码
+
+### Nsight Compute (`ncu`)
+
+- 设备端 CUDA 分析器  
+- 支持 GUI 和 CLI  
+- 使用硬件计数器和软件插装来获取性能指标  
+- 提供基于规则的优化建议  
+- 注意不要和 Nsight Systems 混淆（后者用于系统级性能分析）
+
+---
+
+## 🎯 Occupancy / 占用率
+
+- 活跃 warp 数量与 SM 最大 warp 数的比例  
+- 会随时间和 SM 不同而变化  
+- 占用率低 → 指令发射效率低，难以隐藏延迟  
+- 限制因素：
+  - 每线程使用的寄存器数量  
+  - 每线程块的线程数  
+  - 使用的共享内存大小  
+- ncu 可预测并报告占用率
+
+---
+
+## 🚦 Application Performance Characteristics / 程序性能特征
+
+- **Memory-bound / 内存受限型**：内存带宽接近上限  
+- **Compute-bound / 计算受限型**：指令吞吐接近上限  
+- **Latency-bound / 延迟受限型**：主要瓶颈为延迟/同步/等待  
+- 性能瓶颈依赖于执行阶段和代码区域
+
+---
+
+## 📋 ncu Profiling Commands / `ncu` 分析命令
+
+```bash
+nvcc -lineinfo saxpy.cu -o saxpy         # 编译，包含源码行号
+ncu -o saxpy_prof_report saxpy           # 生成默认分析报告
+ncu --set full -o full_prof_report saxpy # 全指标分析
+ncu --section MemoryWorkloadAnalysis -o mem_prof_report saxpy # 特定分析
+```
+
+Docs:  
+- https://docs.nvidia.com/nsight-compute/NsightComputeCli/index.html  
+- https://developer.nvidia.com/tools-downloads
+
+---
+
+## ⚙️ Kernel Configuration / 内核配置
+
+- 启动更多线程以隐藏延迟  
+- **BLOCK_SIZE**: 线程块内线程数应为32的倍数（warp）  
+- **GRID_SIZE**: 线程块数量建议为 SM 数的倍数  
+- 上限估算：
+  \[
+  \left( rac{	ext{maxThreadsPerMultiprocessor}}{	ext{BLOCK\_SIZE}} 
+ight) 	imes 	ext{multiProcessorCount}
+  \]
+
+---
+
+## 🔀 Branch Divergence / 分支发散
+
+### 原因
+
+- Warp 中线程需要执行相同指令  
+- 条件语句使线程走不同路径 → 部分线程被屏蔽等待  
+
+### 示例
+
+```cpp
+// 发散版本
+if (gid % 2 == 0) array[gid] = 0; 
+else array[gid] = 1;
+
+// 非发散版本
+array[gid] = gid % 2;
+```
+
+### 避免方式
+
+- 拆成多个内核函数
+- 条件分支对齐 warp 边界
+- 使用数学表达式代替条件语句（如 sigmoid）
+
+---
+
+## 🧠 Memory Optimization / 内存优化
+
+### 手动 vs 管理内存
+
+| Host (CPU) | Bus (PCIe/NVLink) | Device (GPU) |
+|------------|-------------------|---------------|
+| `cudaMalloc/copy` | ⬅️➡️ | `cudaMalloc` |
+| `cudaMallocManaged` 自动管理 | | |
+
+---
+
+## 🧮 Shared Memory / 共享内存
+
+- 相当于手动管理的缓存（每线程块可重用）  
+- 分为多个 memory bank，应避免 bank 冲突（连续访问最佳）  
+
+### 示例
+
+```cpp
+__shared__ float s[1024]; // 静态分配
+extern __shared__ float s[]; // 动态分配，调用时指定大小
+```
+
+---
+
+## 🧩 Types of Parallelism / 并行类型
+
+1. **Data Parallelism / 数据并行**：相同操作处理多个数据  
+2. **Task Parallelism / 任务并行**：分为不同任务并分析依赖  
+3. **Pipelining / 流水线并行**：数据通过多个阶段流动
+
+---
+
+## 🔗 Task Parallelism / 任务并行
+
+- 使用任务图表达：  
+  - 节点表示任务，边表示依赖  
+- 支持不同粒度：
+  - 函数级：任务为函数调用
+  - 操作级：任务为运算操作
+
+---
+
+## 🔁 Dynamic Parallelism / 动态并行
+
+- 可在设备端内核中再发起内核  
+- 适用于递归问题  
+- 避免返回 CPU 同步，提高效率  
+
+### 示例：
+
+```cpp
+__global__ void factorial(const int N, int *f){
+  if (N >= 1) {
+    *f *= N;
+    factorial<<<1,1>>>(N-1, f);
+  }
+}
+```
+
+> 编译时加 `--rdc=true` 使设备端代码可重定位
+
+---
+
+## 🌀 Stream Parallelism / 流并行
+
+- 同一 stream 内操作按顺序执行  
+- 不同 stream 可并行执行  
+- CUDA stream = 一列按顺序执行的任务
+
+---
+
+## ⛓️ Asynchronous Task Graphs / 异步任务图
+
+- 任务图包含：
+  - CUDA 内核
+  - 主机函数
+  - 内存拷贝/分配
+  - 子任务图
+
+### 执行流程：
+
+1. 创建任务图  
+2. 实例化图为可执行形式  
+3. 启动任务图
+
+---
+
+📝 文档链接：  
+- https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#creating-a-graph-using-graph-apis  
+- https://www.olcf.ornl.gov/wp-content/uploads/2021/10/013_CUDA_Graphs.pdf
